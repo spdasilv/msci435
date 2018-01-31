@@ -76,15 +76,25 @@ for (i in 1:(k)) {
   Amat[i+n*2+n*k*3, seq(from=n*n*k+i,by =k, length.out = n)] = 1
   Amat[i+n*2+n*k*3, seq(from=n*n*k+n*k+i,by =k, length.out = n)] = -1
 }
+
 #contraint 7
+offSet = 24
+offSetL = 193
 for (i in 1:(n)) {
-  Amat[i+n*2+n*k*3+k, 1] = 1
-  #Amat[i+n*2+n*k*3+k, seq(from=n*n*k+n*k+i,by =k, length.out = n)] = -1
+  Amat[i+n*2+n*k*3+k, (offSet - 23):(offSet)] = 1
+  Amat[i+n*2+n*k*3+k, offSetL:(offSetL+k-1)] = 1
+  offSet = offSet + 24
+  offSetL = offSetL + k
 }
+
 #contraint 8
+offSet = 24
+offSetF = 217
 for (i in 1:(n)) {
-  Amat[i+n*2+n*k*3+k+n, 1] = 1
-  Amat[i+n*2+n*k*3+k+n, seq(from=n*n*k+n*k+i,by =k, length.out = n)] = -1
+  Amat[i+n*2+n*k*3+k+n, (offSet - 23):(offSet)] = 1
+  Amat[i+n*2+n*k*3+k+n, offSetL:(offSetL+k-1)] = 1
+  offSet = offSet + 24
+  offSetL = offSetL + k
 }
 image(Matrix(Amat))
 
@@ -94,9 +104,34 @@ myLP$obj = cvec
 myLP$A = Amat
 myLP$sense = dir
 myLP$rhs = bvec
-myLP$vtypes = "C"
+myLP$vtypes = "B"
 myLP$ub = 1
 
 mysol = gurobi(myLP)
 mysol$objval
 mysol$x
+
+crew1 = matrix(rep(0,n*n) ,nrow = n, ncol=n, byrow = TRUE)
+count = 1
+for(i in 1:n){
+  for(j in 1:n){
+    crew1[i,j]=mysol$x[count]
+    count = count + 3
+  }
+}
+crew2 = matrix(rep(0,n*n) ,nrow = n, ncol=n, byrow = TRUE)
+count = 2
+for(i in 1:n){
+  for(j in 1:n){
+    crew2[i,j]=mysol$x[count]
+    count = count + 3
+  }
+}
+crew3 = matrix(rep(0,n*n) ,nrow = n, ncol=n, byrow = TRUE)
+count = 3
+for(i in 1:n){
+  for(j in 1:n){
+    crew3[i,j]=mysol$x[count]
+    count = count + 3
+  }
+}
