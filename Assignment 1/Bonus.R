@@ -2,8 +2,8 @@ library("Matrix")
 library("igraph")
 library("rdist")
 
-P = 2
-N = 3
+P = 3
+N = 10
 W = matrix(sample(1:5,N^2,replace = T), nrow=N, ncol=N, byrow=T)
 for (i in 1:N){
   W[i,i] = 0
