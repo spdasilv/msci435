@@ -41,7 +41,6 @@ UB = mysol$objval
 
 check = (LB==UB)
 
-### Master Problem ###
 ### Relax on Constraint 8 and 10 ###
 ### Subproblem ###
 
@@ -72,7 +71,9 @@ myMP$A = Matrix(c(1,7,4), nrow=1, ncol=3, byrow=T, sparse=T)
 myMP$sense = c("<=")
 myMP$rhs = c(31)
 myMP$vtypes = "C"
-myMP$lb = c(-Inf, 0, 0) ### This is important !!! 
+# The lower bound for theta should be negative infinity, but this would give an unbounded solution.
+# For this reason, we've set theta >= 0
+myMP$lb = c(0, 0, 0) ### This is important !!! 
 
 mysol = gurobi(myMP)
 
@@ -85,9 +86,6 @@ UB = mysol$objval
 check = (LB==UB)
 
 # Iteration 2: SP #
-
-u1 = 0
-u2 = 31/4
 
 mySP = list()
 mySP$modelsense = "min"
