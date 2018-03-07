@@ -5,8 +5,8 @@ L1 = 1
 L2 = 1
 
 ### Iteration 1 ###
-u1 = 0
-u2 = 0
+u1 = 100
+u2 = 100
 
 ### Subproblem 1 ###
 
@@ -21,6 +21,7 @@ mySP1$vtypes = "I"
 mysol = gurobi(mySP1)
 x1.h = mysol$x
 z.SP1 = mysol$objval
+
 
 ### Subproblem 2 ###
 
@@ -57,16 +58,16 @@ LB = z.SP1 +z.SP2 + z.SP3 - 4000*u1 - 3000*u2
 myMP = list()
 myMP$modelsense = "max"
 myMP$obj = c(1,1,1,-4000,-3000)
-myMP$A = Matrix(c(1,0,0,-(x1.h[1] + x1.h[3]),-(x1.h[2] + x1.h[4]),
-                  0,1,0,-(x2.h[1] + x2.h[3]),-(x2.h[2] + x2.h[4]),
-                  0,0,1,-(x3.h[1] + x3.h[3]),-(x3.h[2] + x3.h[4])),
+myMP$A = Matrix(c(1,0,0,(x1.h[1] + x1.h[3]),(x1.h[2] + x1.h[4]),
+                  0,1,0,(x2.h[1] + x2.h[3]),(x2.h[2] + x2.h[4]),
+                  0,0,1,(x3.h[1] + x3.h[3]),(x3.h[2] + x3.h[4])),
                   nrow=3, ncol=5, byrow=T, sparse=T)
 myMP$sense = c("<=","<=","<=")
 myMP$rhs = c(15.7*x1.h[1] + 10.7*x1.h[2] + 15.4*x1.h[3] + 10.4*x1.h[4],
              15.5*x1.h[1] + 10.5*x1.h[2] + 15.9*x1.h[3] + 10.9*x1.h[4],
              15.7*x1.h[1] + 10.7*x1.h[2] + 15.4*x1.h[3] + 10.4*x1.h[4])
 myMP$vtypes = "C"
-myMP$lb = c(-Inf, -Inf, -Inf, 0, 0)
+myMP$lb = c(-10000, -10000, -10000, 0, 0)
 
 mysol = gurobi(myMP)
 
