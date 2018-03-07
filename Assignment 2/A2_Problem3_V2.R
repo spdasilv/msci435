@@ -53,15 +53,15 @@ SP3 = function(u1, u2, ub=NULL, lb=NULL){
 }
 
 MP = function(myMP, x.h){
-  myMP$A = rBind(myMP$A, Matrix(c(1,0,0,(x.h[1] + x.h[3]),(x.h[2] + x.h[4])),nrow=1, ncol=5, byrow=T, sparse=T))
+  myMP$A = rBind(myMP$A, Matrix(c(1,0,0,-(x.h[1] + x.h[3]),-(x.h[2] + x.h[4])),nrow=1, ncol=5, byrow=T, sparse=T))
   myMP$sense = c(myMP$sense, "<=")
   myMP$rhs = c(myMP$rhs, 15.7*x.h[1] + 10.7*x.h[2] + 15.4*x.h[3] + 10.4*x.h[4])
   
-  myMP$A = rBind(myMP$A, Matrix(c(0,1,0,(x.h[5] + x.h[7]),(x.h[6] + x.h[8])),nrow=1, ncol=5, byrow=T, sparse=T))
+  myMP$A = rBind(myMP$A, Matrix(c(0,1,0,-(x.h[5] + x.h[7]),-(x.h[6] + x.h[8])),nrow=1, ncol=5, byrow=T, sparse=T))
   myMP$sense = c(myMP$sense, "<=")
   myMP$rhs = c(myMP$rhs, 15.5*x.h[5] + 10.5*x.h[6] + 15.9*x.h[7] + 10.9*x.h[8])
   
-  myMP$A = rBind(myMP$A, Matrix(c(0,0,1,(x.h[9] + x.h[11]),(x.h[10] + x.h[12])),nrow=1, ncol=5, byrow=T, sparse=T))
+  myMP$A = rBind(myMP$A, Matrix(c(0,0,1,-(x.h[9] + x.h[11]),-(x.h[10] + x.h[12])),nrow=1, ncol=5, byrow=T, sparse=T))
   myMP$sense = c(myMP$sense, "<=")
   myMP$rhs = c(myMP$rhs, 15.7*x.h[9] + 10.7*x.h[10] + 15.4*x.h[11] + 10.4*x.h[12])
   
@@ -103,17 +103,18 @@ LB = max(LB, (mySP1$z.SP1 + mySP2$z.SP2 + mySP3$z.SP3 - 4000*u1 - 3000*u2))
 myMP = list()
 myMP$modelsense = "max"
 myMP$obj = c(1,1,1,-4000,-3000)
-myMP$A = Matrix(c(1,0,0,(x1.h[1] + x1.h[3]),(x1.h[2] + x1.h[4]),
-                  0,1,0,(x2.h[1] + x2.h[3]),(x2.h[2] + x2.h[4]),
-                  0,0,1,(x3.h[1] + x3.h[3]),(x3.h[2] + x3.h[4])),
+myMP$A = Matrix(c(1,0,0,-(x.h[1] + x.h[3]),-(x.h[2] + x.h[4]),
+                  0,1,0,-(x.h[5] + x.h[7]),-(x.h[6] + x.h[8]),
+                  0,0,1,-(x.h[9] + x.h[11]),-(x.h[10] + x.h[12])),
                 nrow=3, ncol=5, byrow=T, sparse=T)
 myMP$sense = c("<=","<=","<=")
-myMP$rhs = c(15.7*x1.h[1] + 10.7*x1.h[2] + 15.4*x1.h[3] + 10.4*x1.h[4],
-             15.5*x1.h[1] + 10.5*x1.h[2] + 15.9*x1.h[3] + 10.9*x1.h[4],
-             15.7*x1.h[1] + 10.7*x1.h[2] + 15.4*x1.h[3] + 10.4*x1.h[4])
+myMP$rhs = c(15.7*x.h[1] + 10.7*x.h[2] + 15.4*x.h[3] + 10.4*x.h[4],
+             15.5*x.h[5] + 10.5*x.h[6] + 15.9*x.h[7] + 10.9*x.h[8],
+             15.7*x.h[9] + 10.7*x.h[10] + 15.4*x.h[11] + 10.4*x.h[12])
 
 myMP$vtypes = "C"
-myMP$lb = c(-10000, -10000, -10000, 0, 0)
+myMP$lb = c(-1000000, -1000000, -1000000, 0, 0)
+myMP$ub = c(1000000, 1000000, 1000000, 1000000, 1000000)
 
 mysol = gurobi(myMP)
 
@@ -155,3 +156,5 @@ while(!check){
   
   check = (LB==UB)
 }
+LB
+UB

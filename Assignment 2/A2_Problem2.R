@@ -72,8 +72,9 @@ myMP$sense = c("<=")
 myMP$rhs = c(31)
 myMP$vtypes = "C"
 # The lower bound for theta should be negative infinity, but this would give an unbounded solution.
-# For this reason, we've set theta >= 0
-myMP$lb = c(0, 0, 0) ### This is important !!! 
+# For this reason, we've set theta >= 0 in our hand-written (For easier computation) and -1000 on
+# this coded version.
+myMP$lb = c(-1000, 0, 0)
 
 mysol = gurobi(myMP)
 
@@ -110,7 +111,7 @@ myMP$A = Matrix(c(1,13,10,1,7,4), nrow=2, ncol=3, byrow=T, sparse=T)
 myMP$sense = c("<=","<=")
 myMP$rhs = c(63,31)
 myMP$vtypes = "C"
-myMP$lb = c(-Inf, 0, 0) ### This is important !!! 
+myMP$lb = c(-1000, 0, 0)
 
 mysol = gurobi(myMP)
 
