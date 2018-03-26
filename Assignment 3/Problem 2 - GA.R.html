@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<title>Exported from Notepad++</title>
+<style type="text/css">
+span {
+	font-family: 'Courier New';
+	font-size: 10pt;
+	color: #000000;
+}
+.sc0 {
+}
+.sc1 {
+	color: #008000;
+}
+.sc2 {
+	font-weight: bold;
+	color: #0000FF;
+}
+.sc3 {
+	color: #8000FF;
+}
+.sc5 {
+	color: #FF8000;
+}
+.sc8 {
+	font-weight: bold;
+	color: #000080;
+}
+.sc9 {
+}
+.sc10 {
+	color: #804000;
+}
+</style>
+</head>
+<body>
+<div style="float: left; white-space: pre; line-height: 1; background: #FFFFFF; "><span class="sc1">### Genetic Algorithm ###</span><span class="sc0">
+
+</span><span class="sc9">wlist</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">c</span><span class="sc8">(</span><span class="sc5">10</span><span class="sc0">,</span><span class="sc5">20</span><span class="sc0">,</span><span class="sc5">30</span><span class="sc0">,</span><span class="sc5">30</span><span class="sc0">,</span><span class="sc5">40</span><span class="sc0">,</span><span class="sc5">50</span><span class="sc0">,</span><span class="sc5">50</span><span class="sc0">,</span><span class="sc5">50</span><span class="sc0">,</span><span class="sc5">70</span><span class="sc0">,</span><span class="sc5">80</span><span class="sc8">)</span><span class="sc0">
+
+</span><span class="sc1">#This function generates a solution using First Fit Algorithm.</span><span class="sc0">
+</span><span class="sc1">#Once the solution is generated, the fitness is caculated.</span><span class="sc0">
+</span><span class="sc1">#In this case, the energy can be described as the number of bins.</span><span class="sc0">
+</span><span class="sc9">get.fitness</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">function</span><span class="sc8">(</span><span class="sc9">X</span><span class="sc0">, </span><span class="sc9">weight</span><span class="sc8">=</span><span class="sc9">wlist</span><span class="sc0">, </span><span class="sc9">V</span><span class="sc8">=</span><span class="sc5">100</span><span class="sc8">){</span><span class="sc0">
+  </span><span class="sc9">unpacked.items</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">vector</span><span class="sc8">()</span><span class="sc0">
+  </span><span class="sc9">topack.items</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">X</span><span class="sc0">
+  </span><span class="sc9">bins</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0</span><span class="sc0">
+  </span><span class="sc9">packed.items</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0</span><span class="sc0">
+  </span><span class="sc9">curr_bin</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0</span><span class="sc0">
+  </span><span class="sc2">while</span><span class="sc0"> </span><span class="sc8">(</span><span class="sc9">packed.items</span><span class="sc0"> </span><span class="sc8">&lt;</span><span class="sc0"> </span><span class="sc5">10</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+    </span><span class="sc9">bins</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">bins</span><span class="sc0"> </span><span class="sc8">+</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc0">
+    </span><span class="sc9">curr_bin</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0</span><span class="sc0">
+    </span><span class="sc2">for</span><span class="sc0"> </span><span class="sc8">(</span><span class="sc9">i</span><span class="sc0"> </span><span class="sc2">in</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc8">:</span><span class="sc3">length</span><span class="sc8">(</span><span class="sc9">topack.items</span><span class="sc8">))</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+      </span><span class="sc2">if</span><span class="sc0"> </span><span class="sc8">(</span><span class="sc9">curr_bin</span><span class="sc0"> </span><span class="sc8">+</span><span class="sc0"> </span><span class="sc9">weight</span><span class="sc8">[</span><span class="sc9">topack.items</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc8">]]</span><span class="sc0"> </span><span class="sc8">&lt;=</span><span class="sc0"> </span><span class="sc9">V</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+        </span><span class="sc9">curr_bin</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">curr_bin</span><span class="sc0"> </span><span class="sc8">+</span><span class="sc0"> </span><span class="sc9">weight</span><span class="sc8">[</span><span class="sc9">topack.items</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc8">]]</span><span class="sc0">
+        </span><span class="sc9">curr_bin</span><span class="sc0">
+        </span><span class="sc9">packed.items</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">packed.items</span><span class="sc0"> </span><span class="sc8">+</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc0">
+      </span><span class="sc8">}</span><span class="sc0"> </span><span class="sc2">else</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+        </span><span class="sc9">unpacked.items</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">cbind</span><span class="sc8">(</span><span class="sc9">unpacked.items</span><span class="sc0">, </span><span class="sc9">topack.items</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc8">])</span><span class="sc0">
+      </span><span class="sc8">}</span><span class="sc0">
+    </span><span class="sc8">}</span><span class="sc0">
+    </span><span class="sc9">topack.items</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">unpacked.items</span><span class="sc0">
+    </span><span class="sc9">unpacked.items</span><span class="sc0"> </span><span class="sc8">&lt;-</span><span class="sc0"> </span><span class="sc3">vector</span><span class="sc8">()</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  
+  </span><span class="sc5">1</span><span class="sc8">/</span><span class="sc9">bins</span><span class="sc0">
+</span><span class="sc8">}</span><span class="sc0">
+
+</span><span class="sc1">#This creates the initial population.</span><span class="sc0">
+</span><span class="sc9">get.random.population</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">function</span><span class="sc8">(</span><span class="sc9">n</span><span class="sc8">){</span><span class="sc0">
+  </span><span class="sc9">population</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">vector</span><span class="sc8">()</span><span class="sc0">
+  </span><span class="sc2">for</span><span class="sc0"> </span><span class="sc8">(</span><span class="sc9">i</span><span class="sc0"> </span><span class="sc2">in</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc8">:</span><span class="sc9">n</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+    </span><span class="sc9">population</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">cbind</span><span class="sc8">(</span><span class="sc9">population</span><span class="sc0">, </span><span class="sc3">sample</span><span class="sc8">(</span><span class="sc5">1</span><span class="sc8">:</span><span class="sc5">10</span><span class="sc0">, </span><span class="sc5">10</span><span class="sc0">, </span><span class="sc3">replace</span><span class="sc8">=</span><span class="sc9">F</span><span class="sc8">))</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc9">population</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">matrix</span><span class="sc8">(</span><span class="sc9">population</span><span class="sc0">, </span><span class="sc3">nrow</span><span class="sc8">=</span><span class="sc5">10</span><span class="sc0">, </span><span class="sc3">ncol</span><span class="sc8">=</span><span class="sc9">n</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc9">population</span><span class="sc0">
+</span><span class="sc8">}</span><span class="sc0">
+
+</span><span class="sc1">#For each member of the population, this generates the probability of being chosen.</span><span class="sc0">
+</span><span class="sc9">roulette.wheel</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">function</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">){</span><span class="sc0">
+  </span><span class="sc9">probs</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">fitness</span><span class="sc8">/</span><span class="sc3">sum</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc3">sample</span><span class="sc8">(</span><span class="sc3">length</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">)</span><span class="sc0">, </span><span class="sc3">length</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">)</span><span class="sc0">, </span><span class="sc3">replace</span><span class="sc8">=</span><span class="sc9">T</span><span class="sc0">, </span><span class="sc9">prob</span><span class="sc8">=</span><span class="sc9">probs</span><span class="sc8">)</span><span class="sc0">
+</span><span class="sc8">}</span><span class="sc0">
+
+</span><span class="sc1">#This function decides which two members of the population will be mating.</span><span class="sc0">
+</span><span class="sc9">cross.over</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">function</span><span class="sc8">(</span><span class="sc9">mating.population</span><span class="sc0">, </span><span class="sc9">p.c</span><span class="sc8">=</span><span class="sc5">0.75</span><span class="sc8">){</span><span class="sc0">
+  </span><span class="sc9">rlist</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">runif</span><span class="sc8">(</span><span class="sc3">ncol</span><span class="sc8">(</span><span class="sc9">mating.population</span><span class="sc8">)</span><span class="sc0">,</span><span class="sc5">0</span><span class="sc0">,</span><span class="sc5">1</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc9">c.indices</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">which</span><span class="sc8">(</span><span class="sc9">rlist</span><span class="sc0"> </span><span class="sc8">&lt;</span><span class="sc0"> </span><span class="sc9">p.c</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc2">if</span><span class="sc8">(</span><span class="sc3">length</span><span class="sc8">(</span><span class="sc9">c.indices</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">&lt;=</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc8">){</span><span class="sc0">
+    </span><span class="sc9">c.indices</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">order</span><span class="sc8">(</span><span class="sc9">rlist</span><span class="sc8">)[</span><span class="sc5">1</span><span class="sc8">:</span><span class="sc5">2</span><span class="sc8">]</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc2">if</span><span class="sc8">(</span><span class="sc0"> </span><span class="sc8">(</span><span class="sc3">length</span><span class="sc8">(</span><span class="sc9">c.indices</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc10">%%</span><span class="sc0"> </span><span class="sc5">2</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">==</span><span class="sc5">1</span><span class="sc0"> </span><span class="sc8">){</span><span class="sc0">
+    </span><span class="sc9">c.indices</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">c.indices</span><span class="sc8">[-</span><span class="sc3">which</span><span class="sc8">(</span><span class="sc9">rlist</span><span class="sc8">[</span><span class="sc9">c.indices</span><span class="sc8">]</span><span class="sc0"> </span><span class="sc8">==</span><span class="sc0"> </span><span class="sc3">max</span><span class="sc8">(</span><span class="sc9">rlist</span><span class="sc8">[</span><span class="sc9">c.indices</span><span class="sc8">]))]</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc3">pairs</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">matrix</span><span class="sc8">(</span><span class="sc9">c.indices</span><span class="sc0">, </span><span class="sc3">ncol</span><span class="sc8">=</span><span class="sc5">2</span><span class="sc0">, </span><span class="sc9">byrow</span><span class="sc8">=</span><span class="sc9">T</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc9">offsprings</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">NULL</span><span class="sc0"> 
+  </span><span class="sc2">for</span><span class="sc8">(</span><span class="sc9">i</span><span class="sc0"> </span><span class="sc2">in</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc8">:</span><span class="sc3">nrow</span><span class="sc8">(</span><span class="sc3">pairs</span><span class="sc8">)){</span><span class="sc0">
+    </span><span class="sc9">offsprings</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">cbind</span><span class="sc8">(</span><span class="sc9">offsprings</span><span class="sc0">, </span><span class="sc9">coitus</span><span class="sc8">(</span><span class="sc9">mating.population</span><span class="sc8">[(</span><span class="sc5">1</span><span class="sc8">:</span><span class="sc5">10</span><span class="sc8">)</span><span class="sc0">,</span><span class="sc3">pairs</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc0">,</span><span class="sc5">1</span><span class="sc8">]]</span><span class="sc0">,</span><span class="sc9">mating.population</span><span class="sc8">[(</span><span class="sc5">1</span><span class="sc8">:</span><span class="sc5">10</span><span class="sc8">)</span><span class="sc0">,</span><span class="sc3">pairs</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc0">,</span><span class="sc5">2</span><span class="sc8">]])</span><span class="sc0">,
+                       </span><span class="sc9">coitus</span><span class="sc8">(</span><span class="sc9">mating.population</span><span class="sc8">[(</span><span class="sc5">1</span><span class="sc8">:</span><span class="sc5">10</span><span class="sc8">)</span><span class="sc0">,</span><span class="sc3">pairs</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc0">,</span><span class="sc5">2</span><span class="sc8">]]</span><span class="sc0">,</span><span class="sc9">mating.population</span><span class="sc8">[(</span><span class="sc5">1</span><span class="sc8">:</span><span class="sc5">10</span><span class="sc8">)</span><span class="sc0">,</span><span class="sc3">pairs</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc0">,</span><span class="sc5">1</span><span class="sc8">]]))</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc3">list</span><span class="sc8">(</span><span class="sc9">offsprings</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">offsprings</span><span class="sc0">, </span><span class="sc9">c.indices</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">c.indices</span><span class="sc8">)</span><span class="sc0">
+</span><span class="sc8">}</span><span class="sc0">
+
+</span><span class="sc1">#The chosen parents mate and generate an offspring.</span><span class="sc0">
+</span><span class="sc9">coitus</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">function</span><span class="sc8">(</span><span class="sc9">parent_1</span><span class="sc0">, </span><span class="sc9">parent_2</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+  </span><span class="sc9">offspring</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">vector</span><span class="sc8">()</span><span class="sc0">
+  </span><span class="sc2">for</span><span class="sc0"> </span><span class="sc8">(</span><span class="sc9">i</span><span class="sc0"> </span><span class="sc2">in</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc8">:</span><span class="sc3">length</span><span class="sc8">(</span><span class="sc9">parent_1</span><span class="sc8">))</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+    </span><span class="sc2">if</span><span class="sc0"> </span><span class="sc8">(!(</span><span class="sc9">parent_1</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc8">]</span><span class="sc0"> </span><span class="sc10">%in%</span><span class="sc0"> </span><span class="sc9">offspring</span><span class="sc8">))</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+      </span><span class="sc9">offspring</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">c</span><span class="sc8">(</span><span class="sc9">offspring</span><span class="sc0">, </span><span class="sc9">parent_1</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc8">])</span><span class="sc0">
+    </span><span class="sc8">}</span><span class="sc0">
+    </span><span class="sc2">if</span><span class="sc0"> </span><span class="sc8">(!(</span><span class="sc9">parent_2</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc8">]</span><span class="sc0"> </span><span class="sc10">%in%</span><span class="sc0"> </span><span class="sc9">offspring</span><span class="sc8">))</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+      </span><span class="sc9">offspring</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">c</span><span class="sc8">(</span><span class="sc9">offspring</span><span class="sc0">, </span><span class="sc9">parent_2</span><span class="sc8">[</span><span class="sc9">i</span><span class="sc8">])</span><span class="sc0">
+    </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc9">offspring</span><span class="sc0">
+</span><span class="sc8">}</span><span class="sc0">
+
+</span><span class="sc1">#This allows mutation, where two items of an offspring are swapped in their order.</span><span class="sc0">
+</span><span class="sc9">mutation</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">function</span><span class="sc8">(</span><span class="sc9">offsprings</span><span class="sc0">, </span><span class="sc9">p.m</span><span class="sc8">=</span><span class="sc5">0.1</span><span class="sc8">){</span><span class="sc0">
+  </span><span class="sc2">for</span><span class="sc8">(</span><span class="sc9">i</span><span class="sc0"> </span><span class="sc2">in</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc8">:</span><span class="sc3">ncol</span><span class="sc8">(</span><span class="sc9">offsprings</span><span class="sc8">)){</span><span class="sc0">
+    </span><span class="sc9">v</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">runif</span><span class="sc8">(</span><span class="sc5">1</span><span class="sc8">)</span><span class="sc0">
+    </span><span class="sc2">if</span><span class="sc0"> </span><span class="sc8">(</span><span class="sc5">1</span><span class="sc0"> </span><span class="sc8">&lt;</span><span class="sc0"> </span><span class="sc9">p.m</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">{</span><span class="sc0">
+      </span><span class="sc9">swap</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">sample</span><span class="sc8">(</span><span class="sc5">1</span><span class="sc8">:</span><span class="sc5">10</span><span class="sc0">, </span><span class="sc5">2</span><span class="sc0">, </span><span class="sc3">replace</span><span class="sc8">=</span><span class="sc9">F</span><span class="sc8">)</span><span class="sc0">
+      </span><span class="sc9">tmp</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">offsprings</span><span class="sc8">[</span><span class="sc9">swap</span><span class="sc8">[</span><span class="sc5">1</span><span class="sc8">]</span><span class="sc0">,</span><span class="sc9">i</span><span class="sc8">]</span><span class="sc0">
+      </span><span class="sc9">offsprings</span><span class="sc8">[</span><span class="sc9">swap</span><span class="sc8">[</span><span class="sc5">1</span><span class="sc8">]</span><span class="sc0">,</span><span class="sc9">i</span><span class="sc8">]</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">offsprings</span><span class="sc8">[</span><span class="sc9">swap</span><span class="sc8">[</span><span class="sc5">2</span><span class="sc8">]</span><span class="sc0">,</span><span class="sc9">i</span><span class="sc8">]</span><span class="sc0">
+      </span><span class="sc9">offsprings</span><span class="sc8">[</span><span class="sc9">swap</span><span class="sc8">[</span><span class="sc5">2</span><span class="sc8">]</span><span class="sc0">,</span><span class="sc9">i</span><span class="sc8">]</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">tmp</span><span class="sc0">
+    </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  </span><span class="sc9">offsprings</span><span class="sc0">
+</span><span class="sc8">}</span><span class="sc0">
+
+</span><span class="sc1">#initializing parameters</span><span class="sc0">
+</span><span class="sc9">p.c</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0.75</span><span class="sc0">
+</span><span class="sc9">p.m</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0.1</span><span class="sc0">
+
+</span><span class="sc9">max.iter</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">100</span><span class="sc0">
+</span><span class="sc9">iter</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0</span><span class="sc0">
+
+</span><span class="sc9">x.best</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0</span><span class="sc0">
+</span><span class="sc9">z.best</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">0</span><span class="sc0">
+</span><span class="sc9">n</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc5">100</span><span class="sc0">
+
+</span><span class="sc9">population</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">get.random.population</span><span class="sc8">(</span><span class="sc9">n</span><span class="sc8">)</span><span class="sc0">
+
+</span><span class="sc9">z.list</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">NULL</span><span class="sc0">
+</span><span class="sc9">mean.z.list</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc2">NULL</span><span class="sc0">
+
+</span><span class="sc1">#This is the main function that calls the other functions.</span><span class="sc0">
+</span><span class="sc2">while</span><span class="sc8">(</span><span class="sc9">iter</span><span class="sc0"> </span><span class="sc8">&lt;</span><span class="sc0"> </span><span class="sc9">max.iter</span><span class="sc8">){</span><span class="sc0">
+  </span><span class="sc9">fitness</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">apply</span><span class="sc8">(</span><span class="sc9">population</span><span class="sc0">, </span><span class="sc5">2</span><span class="sc0">, </span><span class="sc9">get.fitness</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc9">z.list</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">c</span><span class="sc8">(</span><span class="sc9">z.list</span><span class="sc0">, </span><span class="sc3">max</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">))</span><span class="sc0">
+  </span><span class="sc9">mean.z.list</span><span class="sc0">  </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">c</span><span class="sc8">(</span><span class="sc9">mean.z.list</span><span class="sc0">, </span><span class="sc3">mean</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">))</span><span class="sc0">   
+  </span><span class="sc2">if</span><span class="sc8">(</span><span class="sc3">max</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">)</span><span class="sc0"> </span><span class="sc8">&gt;</span><span class="sc0"> </span><span class="sc9">z.best</span><span class="sc8">){</span><span class="sc0">
+    </span><span class="sc9">z.best</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc3">max</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">)</span><span class="sc0">
+    </span><span class="sc9">x.best</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">population</span><span class="sc8">[</span><span class="sc0">,</span><span class="sc3">which</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">==</span><span class="sc3">max</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">))[</span><span class="sc5">1</span><span class="sc8">]]</span><span class="sc0">
+  </span><span class="sc8">}</span><span class="sc0">
+  
+  </span><span class="sc9">m.indices</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">roulette.wheel</span><span class="sc8">(</span><span class="sc9">fitness</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc9">mating.population</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">population</span><span class="sc8">[</span><span class="sc0">,</span><span class="sc9">m.indices</span><span class="sc8">]</span><span class="sc0">
+  
+  </span><span class="sc9">cover</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">cross.over</span><span class="sc8">(</span><span class="sc9">mating.population</span><span class="sc8">)</span><span class="sc0">
+  </span><span class="sc9">c.indices</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">cover</span><span class="sc8">$</span><span class="sc9">c.indices</span><span class="sc0">
+  </span><span class="sc9">offsprings</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">cover</span><span class="sc8">$</span><span class="sc9">offsprings</span><span class="sc0">
+  </span><span class="sc9">offsprings</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">mutation</span><span class="sc8">(</span><span class="sc9">offsprings</span><span class="sc8">)</span><span class="sc0">
+  
+  </span><span class="sc9">population</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">mating.population</span><span class="sc0">
+  </span><span class="sc9">population</span><span class="sc8">[</span><span class="sc0">,</span><span class="sc9">c.indices</span><span class="sc8">]</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">offsprings</span><span class="sc0">
+  </span><span class="sc9">iter</span><span class="sc0"> </span><span class="sc8">=</span><span class="sc0"> </span><span class="sc9">iter</span><span class="sc0"> </span><span class="sc8">+</span><span class="sc0"> </span><span class="sc5">1</span><span class="sc0">
+</span><span class="sc8">}</span><span class="sc0">
+
+</span><span class="sc1">#solution</span><span class="sc0">
+</span><span class="sc9">x.best</span><span class="sc0">
+</span><span class="sc5">1</span><span class="sc8">/</span><span class="sc9">z.best</span></div></body>
+</html>
