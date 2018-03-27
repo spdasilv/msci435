@@ -309,4 +309,143 @@ for(g in row_start:row_end){
   }
   
   Amat[g,9671:9790] = Wij.vector
+  if (I_Count == 10){
+    I_Count = 1
+  }
+  else {
+    I_Count = I_Count + 1
+  }
+}
+
+
+#constraint (11)
+I_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + (I)
+for(g in row_start:row_end){
+  Wij = array(0,dim=c(I,J))
+  for (j in 1:J) {
+    Wij[I_Count, j] = 1
+  }
+  
+  Wij.vector = integer(I*J)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      count = count + Wij[i,j]
+      Wij.vector[vector.position] = Wij[i,j]
+      vector.position = vector.position + 1
+    }
+  }
+  
+  Yik.vector = integer(I*K)
+  vector.position = 1
+  for (i in 1:I){
+    count = count + 2 + 1
+    Yik.vector[vector.position] = 1
+    vector.position = vector.position + 1
+    Yik.vector[vector.position] = 2
+    vector.position = vector.position + 1
+  }
+  
+  Amat[g,9671:9790] = Wij.vector
+  Amat[g,9651:9770] = Yik.vector
+  if (I_Count == 10){
+    I_Count = 1
+  }
+  else {
+    I_Count = I_Count + 1
+  }
+}
+
+#constraint (10)
+J_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + (J)
+for(g in row_start:row_end){
+  Wij = array(0,dim=c(I,J))
+  for (i in 1:I) {
+    Wij[i, J_Count] = 1
+  }
+  
+  Wij.vector = integer(I*J)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      count = count + Wij[i,j]
+      Wij.vector[vector.position] = Wij[i,j]
+      vector.position = vector.position + 1
+    }
+  }
+  
+  Amat[g,9671:9790] = Wij.vector
+  if (J_Count == 12){
+    J_Count = 1
+  }
+  else {
+    J_Count = J_Count + 1
+  }
+}
+
+
+#constraint (1)
+row_start = 1 + row_end
+row_end = row_end + 1
+Amat[row_start,9651:9670] = c(rep(1, 20))
+
+
+#constraint (14)
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + (J)
+
+for(g in row_start:row_end){
+  vector.position = 9671
+  for (i in 1:I){
+    for (j in 1:J){
+      count = count + 1
+      Amat[g,vector.position] = Wij.vector = 1
+      vector.position = vector.position + 1
+    }
+  }
+}
+
+
+#constraint (2)
+I_Count = 1
+C_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + (I*C)
+for(g in row_start:row_end){
+  Wij = array(0,dim=c(I,J))
+  for (j in 1:J) {
+    Wij[I_Count, j] = Cohort[j, C_Count]
+  }
+  
+  Wij.vector = integer(I*J)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      count = count + Wij[i,j]
+      Wij.vector[vector.position] = Wij[i,j]
+      vector.position = vector.position + 1
+    }
+  }
+  
+  Amat[g,9671:9790] = Wij.vector
+  
+  if (I_Count == 10){
+    I_Count = 1
+    C_Count = C_Count + 1
+  }
+  else {
+    I_Count = I_Count + 1
+  }
 }
