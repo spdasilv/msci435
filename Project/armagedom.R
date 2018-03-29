@@ -1,6 +1,7 @@
 library("Matrix")
 library("igraph")
 library("rdist")
+library("gurobi")
 
 I = 10
 J = 22
@@ -24,7 +25,7 @@ P = matrix(c(0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 
              1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	0, 	0, 
              1, 	1, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	0, 	0), nrow=I, ncol=J, byrow=T)
 
-Amat = matrix(0, nrow=((T - 1)*D*C + (T - 2)*D*C + 2*I*J + 2*I + J + 1 + I*C + I*(T-1)*D + I*(T-2)*D + I*D), ncol=(I*J*T*D*C + I*D + I*K + I*J))
+Amat = Matrix(0, nrow=((T - 1)*D*C + (T - 2)*D*C + 2*I*J + 2*I + J + 1 + I*C + I*(T-1)*D + I*(T-2)*D + I*D), ncol=(I*J*T*D*C + I*D + I*K + I*J))
 bvec = c()
 dir = c()
 
@@ -88,6 +89,8 @@ for (i in 1:I){
     }
   }
 }
+
+cvec = c(cvec, rep(0,I*J))
 
 X_Vars = I*J*T*D*C
 Z_Vars = I*D + X_Vars
@@ -614,3 +617,17 @@ for(g in row_start:row_end){
     I_Count = I_Count + 1
   }
 }
+
+image(Matrix(Amat))
+
+myLP = list()
+myLP$obj = cvec
+myLP$A = Amat
+myLP$sense = dir
+myLP$rhs = bvec
+myLP$vtypes = "B"
+myLP$ub = 1
+
+mysol = gurobi(myLP)
+mysol$objval
+mysol$x
