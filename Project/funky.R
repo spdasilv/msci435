@@ -25,7 +25,7 @@ P = matrix(c(0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 
              1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 
              1, 	1, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1), nrow=I, ncol=J, byrow=T)
 
-Amat = Matrix(0, nrow=(2 + J + 3*I*J + 2*I + ((J-2)*I)/2 + I*C + I*D + (T - 1)*D*C + (T - 2)*D*C + I*(T-1)*D + I*(T-2)*D), ncol=(I*J*T*D*C + I*D + I*K + I*J))
+Amat = Matrix(0, nrow=(4 + J + 3*I*J + 2*I + ((J-2)*I)/2 + I*C + I*D + (T - 1)*D*C + (T - 2)*D*C + I*(T-1)*D + I*(T-2)*D + D*(J-2)/2), ncol=(I*J*T*D*C + I*D + I*K + I*J))
 bvec = c()
 dir = c()
 
@@ -700,6 +700,135 @@ for(g in row_start:row_end){
   }
 }
 
+#constraint (17)
+row_start = 1 + row_end
+row_end = row_end + (1)
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+  
+  for (i in 1:I) {
+    for (j in 1:J) {
+      for(d in 1:D){
+        for(c in 1:C){
+          if (H[j] == 2) {
+            Xijtdc[i,j,7,d,c] = 1
+            Xijtdc[i,j,8,d,c] = 1
+          }
+        }
+      }
+    }
+  }
+  
+  count = 0
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            count = count + Xijtdc[i,j,t,d,c]
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+  
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, 0)
+  dir = c(dir, '=')
+}
+
+#constraint (18)
+row_start = 1 + row_end
+row_end = row_end + (1)
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+  
+  for (i in 1:I) {
+    for (j in 1:J) {
+      for(d in 1:D){
+        for(c in 1:C){
+          if (H[j] == 3) {
+            Xijtdc[i,j,6,d,c] = 1
+            Xijtdc[i,j,7,d,c] = 1
+            Xijtdc[i,j,8,d,c] = 1
+          }
+        }
+      }
+    }
+  }
+  
+  count = 0
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            count = count + Xijtdc[i,j,t,d,c]
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+  
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, 0)
+  dir = c(dir, '=')
+}
+
+#constraint (19)
+D_Count = 1
+J_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + D*(J-2)/2
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+  for (i in 1:I) {
+    for(t in 1:T){
+      for(c in 1:C){
+        Xijtdc[i, J_Count, t, D_Count, c] = 1
+        Xijtdc[i, J_Count + 1, t, D_Count, c] = 1
+      }
+    }
+  }
+  
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            count = count + Xijtdc[i,j,t,d,c]
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+  
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, 1)
+  dir = c(dir, '<=')
+  
+  if (D_Count == 5){
+    D_Count = 1
+    J_Count = J_Count + 2
+  }
+  else {
+    D_Count = D_Count + 1
+  }
+}
 #image(Matrix(Amat[1:3,1:X_Vars]))
 
 myLP = list()
