@@ -45,7 +45,7 @@ P = matrix(c(0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 
              1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 
              1, 	1, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1), nrow=I, ncol=J, byrow=T)
 
-Amat = Matrix(0, nrow=(4 + J + 3*I*J + 2*I + ((J-2)*I)/2 + I*C + I*D + (T - 1)*D*C + (T - 2)*D*C + I*(T-1)*D + I*(T-2)*D + D*(J-2)/2 + J*C + T*D*C), ncol=(I*J*T*D*C + I*D + I*K + I*J))
+Amat = Matrix(0, nrow=(4 + J + 3*I*J + 2*I + ((J-2)*I)/2 + I*C + I*D + (T - 1)*D*C + (T - 2)*D*C + I*(T-1)*D + I*(T-2)*D + D*(J-2)/2 + J*C + T*D*C + (T-1)*D + (T-2)*D +(T*D)), ncol=(I*J*T*D*C + I*D + I*K + I*J))
 bvec = c()
 dir = c()
 
@@ -517,6 +517,11 @@ for(g in row_start:row_end){
         Xijtdc[i,j,T_Count,D_Count,C_Count] = 1
       }
       Xijtdc[i,j,T_Count + 1,D_Count,C_Count] = 1
+      if(C_Count==2){
+        if(j == 13 || j == 14 || j == 19 || j == 20 || j == 22){
+          Xijtdc[i,j,T_Count + 1,D_Count,1] = 1
+        }
+      }
     }
   }
   
@@ -572,6 +577,12 @@ for(g in row_start:row_end){
       }
       Xijtdc[i,j,T_Count + 1,D_Count,C_Count] = 1
       Xijtdc[i,j,T_Count + 2,D_Count,C_Count] = 1
+      if(C_Count==2){
+        if(j == 13 || j == 14 || j == 19 || j == 20 || j == 22){
+          Xijtdc[i,j,T_Count + 1,D_Count,1] = 1
+          Xijtdc[i,j,T_Count + 2,D_Count,1] = 1
+        }
+      }
     }
   }
   
@@ -719,7 +730,7 @@ for(g in row_start:row_end){
   }
 }
 
-#constraint (21)
+#constraint (5)
 T_Count = 1
 D_Count = 1
 C_Count = 1
@@ -940,6 +951,157 @@ for(g in row_start:row_end){
   }
   else {
     C_Count = C_Count + 1
+  }
+}
+
+
+#constraint (6)
+T_Count = 1
+D_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + ((T-1)*D)
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+  
+  for (i in 1:I) {
+    for (j in 1:J) {
+      for (c in 1:C){
+        if (j == 13 || j == 14 || j == 19 || j == 20) {
+          Xijtdc[i,j,T_Count,D_Count,c] = 1
+        }
+        Xijtdc[i,j,T_Count + 1,D_Count,c] = 1
+      }
+    }
+  }
+  
+  count = 0
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            count = count + Xijtdc[i,j,t,d,c]
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+  
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, 1)
+  dir = c(dir, '<=')
+  
+  if (D_Count == 5){
+    D_Count = 1
+    T_Count = T_Count + 1
+  }
+  else {
+    D_Count = D_Count + 1
+  }
+}
+
+#constraint (7)
+T_Count = 1
+D_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + ((T-2)*D)
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+
+  for (i in 1:I) {
+    for (j in 1:J) {
+      for (c in 1:C){
+        if (j == 22) {
+          Xijtdc[i,j,T_Count,D_Count,c] = 1
+        }
+        Xijtdc[i,j,T_Count + 1,D_Count,c] = 1
+        Xijtdc[i,j,T_Count + 2,D_Count,c] = 1
+      }
+    }
+  }
+
+  count = 0
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            count = count + Xijtdc[i,j,t,d,c]
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, 1)
+  dir = c(dir, '<=')
+
+  if (D_Count == 5){
+    D_Count = 1
+    T_Count = T_Count + 1
+  }
+  else {
+    D_Count = D_Count + 1
+  }
+}
+
+#constraint (8)
+T_Count = 1
+D_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + (T*D)
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+
+  for (i in 1:I) {
+    for (j in 1:J) {
+      Xijtdc[i,j,T_Count,D_Count,2] = 1
+      if(j == 13 || j == 14 || j == 19 || j == 20){
+        Xijtdc[i,j,T_Count,D_Count,1] = 1
+      }
+    }
+  }
+
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, 1)
+  dir = c(dir, '<=')
+
+  if (D_Count == 5){
+    D_Count = 1
+    T_Count = T_Count + 1
+  }
+  else {
+    D_Count = D_Count + 1
   }
 }
 
