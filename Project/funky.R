@@ -12,8 +12,28 @@ K = 2
 M = 1000
 
 H = c(2,	2,	3,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	3,	3)
-Cohort = matrix(c(1, 	1, 	1, 	1, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	1, 	1, 	1, 	1, 	1, 	1, 	1, 	1, 	0, 	1, 
-                  0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	1, 	1, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	0), nrow=J, ncol=C, byrow=T)
+Cohort = matrix(c(1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  0, 	1, 
+                  0, 	1, 
+                  1, 	0, 
+                  1, 	0, 
+                  0, 	1, 
+                  0, 	1, 
+                  0, 	1, 
+                  0, 	1, 
+                  1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  1, 	0, 
+                  0, 	1, 
+                  1, 	0), nrow=J, ncol=C, byrow=T)
 P = matrix(c(0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 
              0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 
              0, 	0, 	1, 	1, 	0, 	0, 	1, 	1, 	1, 	1, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 
@@ -25,7 +45,7 @@ P = matrix(c(0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 
              1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 
              1, 	1, 	0, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	0, 	1), nrow=I, ncol=J, byrow=T)
 
-Amat = Matrix(0, nrow=(4 + J + 3*I*J + 2*I + ((J-2)*I)/2 + I*C + I*D + (T - 1)*D*C + (T - 2)*D*C + I*(T-1)*D + I*(T-2)*D + D*(J-2)/2), ncol=(I*J*T*D*C + I*D + I*K + I*J))
+Amat = Matrix(0, nrow=(4 + J + 3*I*J + 2*I + ((J-2)*I)/2 + I*C + I*D + (T - 1)*D*C + (T - 2)*D*C + I*(T-1)*D + I*(T-2)*D + D*(J-2)/2 + J*C + T*D*C), ncol=(I*J*T*D*C + I*D + I*K + I*J))
 bvec = c()
 dir = c()
 
@@ -495,8 +515,8 @@ for(g in row_start:row_end){
     for (j in 1:J) {
       if (H[j] == 2) {
         Xijtdc[i,j,T_Count,D_Count,C_Count] = 1
-        Xijtdc[i,j,T_Count + 1,D_Count,C_Count] = 1
       }
+      Xijtdc[i,j,T_Count + 1,D_Count,C_Count] = 1
     }
   }
   
@@ -549,9 +569,9 @@ for(g in row_start:row_end){
     for (j in 1:J) {
       if (H[j] == 3) {
         Xijtdc[i,j,T_Count,D_Count,C_Count] = 1
-        Xijtdc[i,j,T_Count + 1,D_Count,C_Count] = 1
-        Xijtdc[i,j,T_Count + 2,D_Count,C_Count] = 1
       }
+      Xijtdc[i,j,T_Count + 1,D_Count,C_Count] = 1
+      Xijtdc[i,j,T_Count + 2,D_Count,C_Count] = 1
     }
   }
   
@@ -589,7 +609,6 @@ for(g in row_start:row_end){
   }
 }
 
-
 #constraint (3)
 I_Count = 1
 T_Count = 1
@@ -605,8 +624,8 @@ for(g in row_start:row_end){
     for (c in 1:C) {
       if (H[j] == 2) {
         Xijtdc[I_Count,j,T_Count,D_Count,c] = 1
-        Xijtdc[I_Count,j,T_Count + 1,D_Count,c] = 1
       }
+      Xijtdc[I_Count,j,T_Count + 1,D_Count,c] = 1
     }
   }
   
@@ -659,9 +678,9 @@ for(g in row_start:row_end){
     for (c in 1:C) {
       if (H[j] == 3) {
         Xijtdc[I_Count,j,T_Count,D_Count,c] = 1
-        Xijtdc[I_Count,j,T_Count + 1,D_Count,c] = 1
-        Xijtdc[I_Count,j,T_Count + 2,D_Count,c] = 1
       }
+      Xijtdc[I_Count,j,T_Count + 1,D_Count,c] = 1
+      Xijtdc[I_Count,j,T_Count + 2,D_Count,c] = 1
     }
   }
   
@@ -697,6 +716,55 @@ for(g in row_start:row_end){
   if (T_Count == 7) {
     T_Count = 1
     I_Count = I_Count + 1
+  }
+}
+
+#constraint (21)
+T_Count = 1
+D_Count = 1
+C_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + (T*D*C)
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+  
+  for (i in 1:I) {
+    for (j in 1:J) {
+      Xijtdc[i,j,T_Count,D_Count,C_Count] = 1
+    }
+  }
+  
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+  
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, 1)
+  dir = c(dir, '<=')
+  
+  if (C_Count == 2){
+    C_Count = 1
+    D_Count = D_Count + 1
+  }
+  else {
+    C_Count = C_Count + 1
+  }
+  if (D_Count == 6) {
+    D_Count = 1
+    T_Count = T_Count + 1
   }
 }
 
@@ -829,7 +897,53 @@ for(g in row_start:row_end){
     D_Count = D_Count + 1
   }
 }
-#image(Matrix(Amat[1:3,1:X_Vars]))
+
+#constraint (20)
+J_Count = 1
+C_Count = 1
+count = 0
+
+row_start = 1 + row_end
+row_end = row_end + (J*C)
+for(g in row_start:row_end){
+  Xijtdc = array(0,dim=c(I,J,T,D,C))
+  for (i in 1:I) {
+    for (t in 1:T) {
+      for (d in 1:D) {
+        Xijtdc[i, J_Count, t, d, C_Count] = 1
+      }
+    }
+  }
+  
+  Xijtdc.vector = integer(I*J*T*D*C)
+  vector.position = 1
+  for (i in 1:I){
+    for (j in 1:J){
+      for (t in 1:T){
+        for (d in 1:D){
+          for (c in 1:C){
+            Xijtdc.vector[vector.position] = Xijtdc[i,j,t,d,c]
+            vector.position = vector.position + 1
+          }
+        }
+      }
+    }
+  }
+  
+  Amat[g,1:X_Vars] = Xijtdc.vector
+  bvec = c(bvec, Cohort[J_Count, C_Count])
+  dir = c(dir, '<=')
+  
+  if (C_Count == 2){
+    C_Count = 1
+    J_Count = J_Count + 1
+  }
+  else {
+    C_Count = C_Count + 1
+  }
+}
+
+image(Matrix(Amat[1787:1830,1:100]))
 
 myLP = list()
 myLP$obj = cvec
