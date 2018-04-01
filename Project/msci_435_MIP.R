@@ -1149,8 +1149,6 @@ for(g in row_start:row_end){
   }
 }
 
-image(Matrix(Amat[1866:1895,1600:1800]))
-
 myLP = list()
 myLP$obj = cvec
 myLP$A = Amat
