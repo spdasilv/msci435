@@ -1165,7 +1165,7 @@ mysol$x
 ### MAGIC ###
 
 # Create objective function of subproblems
-u = 0
+u = 100
 uvec = c(rep(u,I + I*D + I*J))
 cvec_LR = cvec
 relaxed_Cons = Amat[125:404,]
@@ -1205,30 +1205,84 @@ LB = -Inf
 Incumbent = -Inf
 X = NULL
 
-### Subproblems ###
-mySP = SP(cvec_LR, Amat_LR, dir_LR, bvec_LR)
+cvec_LR_1 = cvec_LR[1:X_Vars]
+cvec_LR_2 = cvec_LR[(X_Vars+1):Z_Vars]
+cvec_LR_3 = cvec_LR[(Z_Vars+1):Y_Vars]
+cvec_LR_4 = cvec_LR[(Y_Vars+1):W_Vars]
 
-x.h = c(mySP1$x.h)
+remove_EmptyRows = function(Amat, dir, bvec) {
+  zeroes = which(apply(Amat==0,1,all))
+  new_Amat = Amat[-zeroes,]
+  new_bvec = bvec[-zeroes]
+  new_dir = dir[-zeroes]
+  
+  list(new_Amat = new_Amat, new_bvec = new_bvec, new_dir = new_dir)
+}
+
+zeroes = which(apply(Amat_LR[,1:X_Vars]==0,1,all))
+new_Amat = Amat[-zeroes,]
+new_bvec = bvec_LR[-zeroes]
+new_dir = dir_LR[-zeroes]
+
+SP_1 = remove_EmptyRows(Amat_LR[,1:X_Vars], dir_LR, bvec_LR)
+SP_2 = remove_EmptyRows(Amat_LR[,(X_Vars+1):Z_Vars], dir_LR, bvec_LR)
+SP_3 = remove_EmptyRows(Amat_LR[,(Z_Vars+1):Y_Vars], dir_LR, bvec_LR)
+SP_4 = remove_EmptyRows(Amat_LR[,(Y_Vars+1):W_Vars], dir_LR, bvec_LR)
+
+Amat_LR_1 = SP_1$new_Amat
+Amat_LR_2 = SP_2$new_Amat
+Amat_LR_3 = SP_3$new_Amat
+Amat_LR_4 = SP_4$new_Amat
+
+dir_LR_1 = SP_1$new_dir
+dir_LR_2 = SP_2$new_dir
+dir_LR_3 = SP_3$new_dir
+dir_LR_4 = SP_4$new_dir
+
+bvec_LR_1 = SP_1$new_bvec
+bvec_LR_2 = SP_2$new_bvec
+bvec_LR_3 = SP_3$new_bvec
+bvec_LR_4 = SP_4$new_bvec
+
+### Subproblems ###
+mySP_1 = SP(cvec_LR_1, Amat_LR_1, dir_LR_1, bvec_LR_1)
+mySP_2 = SP(cvec_LR_2, Amat_LR_2, dir_LR_2, bvec_LR_2)
+mySP_3 = SP(cvec_LR_3, Amat_LR_3, dir_LR_3, bvec_LR_3)
+mySP_4 = SP(cvec_LR_4, Amat_LR_4, dir_LR_4, bvec_LR_4)
+
+x.h = c(mySP_1$x.h, mySP_2$x.h, mySP_3$x.h, mySP_4$x.h)
 X = cBind(X, x.h)
-LB = max(LB, mySP1$z.SP)
+LB = max(LB, mySP_1$z.SP + mySP_2$z.SP + mySP_3$z.SP + mySP_4$z.SP)
 
 ### Master Problem ###
-uvec_MP = c()
+uvec_MP_1 = c()
+uvec_MP_2 = c()
+uvec_MP_3 = c()
+uvec_MP_4 = c()
 for (g in 1:nrow(relaxed_Cons)){
-  uvec_MP = c(uvec_MP, (-1)*sum(relaxed_Cons[g,]*x.h))
+  uvec_MP_1 = c(uvec_MP_1, (-1)*sum(relaxed_Cons[g,1:X_Vars]*mySP_1$x.h))
+  uvec_MP_2 = c(uvec_MP_2, (-1)*sum(relaxed_Cons[g,(X_Vars+1):Z_Vars]*mySP_2$x.h))
+  uvec_MP_3 = c(uvec_MP_3, (-1)*sum(relaxed_Cons[g,(Z_Vars+1):Y_Vars]*mySP_3$x.h))
+  uvec_MP_4 = c(uvec_MP_4, (-1)*sum(relaxed_Cons[g,(Y_Vars+1):W_Vars]*mySP_4$x.h))
 }
 
 myMP = list()
 myMP$modelsense = "max"
-myMP$obj = c(1,bvec_LR_Relaxed)
-myMP$A = Matrix(c(1, uvec_MP),nrow=1, ncol=(length(uvec_MP)+1), byrow=T, sparse=T)
-myMP$sense = c("<=")
-myMP$rhs = sum(x.h*cvec)
+myMP$obj = c(1, 1, 1, 1, bvec_LR_Relaxed)
+myMP$A = Matrix(c(1, 0, 0, 0, uvec_MP_1,
+                  0, 1, 0, 0, uvec_MP_2,
+                  0, 0, 1, 0, uvec_MP_3,
+                  0, 0, 0, 1, uvec_MP_4),nrow=4, ncol=(length(uvec_MP_1)+4), byrow=T, sparse=T)
+myMP$sense = c("<=","<=","<=","<=")
+myMP$rhs = sum(mySP_1$x.h*cvec[1:X_Vars],
+               mySP_2$x.h*cvec[(X_Vars+1):Z_Vars],
+               mySP_3$x.h*cvec[(Z_Vars+1):Y_Vars],
+               mySP_4$x.h*cvec[(Y_Vars+1):W_Vars])
 
 myMP$vtypes = "C"
-myMP$lb = c(-1000000, bvec_LR_Relaxed)
-myMP$ub = c(1000000, rep(1000000, length(bvec_LR_Relaxed)))
+myMP$lb = c(-1000000, -1000000, -1000000, -1000000, bvec_LR_Relaxed)
+myMP$ub = c(1000000, 1000000, 1000000, 1000000, rep(1000000, length(bvec_LR_Relaxed)))
 
 mysol = gurobi(myMP)
 
-theta1 = mysol$x[1]
+theta1 = mysol$x
