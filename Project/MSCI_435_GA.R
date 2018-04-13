@@ -1,28 +1,140 @@
+H = c(2,	2,	3,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	2,	3,	3)
 
-
-get.fitness = function(X, weight=wlist, V=100){
-  unpacked.items = vector()
-  topack.items = X
-  bins = 0
-  packed.items = 0
-  curr_bin = 0
-  while (packed.items < 10) {
-    bins = bins + 1
-    curr_bin = 0
-    for (i in 1:length(topack.items)) {
-      if (curr_bin + weight[topack.items[i]] <= V) {
-        curr_bin = curr_bin + weight[topack.items[i]]
-        curr_bin
-        packed.items = packed.items + 1
-      } else {
-        unpacked.items = cbind(unpacked.items, topack.items[i])
-      }
+get.fitness = function(Cohort_1, Cohort_2, H){
+  Cohort_1 = population[1][[1]][1][[1]]
+  Cohort_2 = population[1][[1]][2][[1]]
+  schedule_1 = matrix(list(), nrow=8, ncol=5)
+  schedule_2 = matrix(list(), nrow=8, ncol=5)
+  mondayProfs = c()
+  fridayProfs = c()
+  
+  # Evaluate objective function
+  penalty = 0
+  
+  # Get number of courses taught by professors
+  profToCourse = as.data.frame(table(c(Cohort_1[,2], Cohort_2[,2])))
+  for (i in 2:nrow(profToCourse)) {
+    if (profToCourse[6,2] > 2) {
+      penalty = penalty + 8
+    } else {
+      penalty = penalty + 4
     }
-    topack.items = unpacked.items
-    unpacked.items <- vector()
   }
   
-  1/bins
+  
+  # Penalize number of professors
+  penalty = penalty + 10*(length(unique(c(Cohort_1[,2], Cohort_2[,2]))) - 1)
+  
+  # Generater Schedule for Cohort 1
+  j = 1
+  Cohort_1_Selected = c(rep(FALSE,23))
+  while (j <= 5)
+  {
+    i = 1
+    while (i <= 8)
+    {
+      feasible = FALSE
+      for (g in 1:length(Cohort_1_Selected)) {
+        if (!Cohort_1_Selected[g] && Cohort_1[g,1] == 0) {
+          schedule_1[[i,j]] = c(0,0)
+          i = i + 1
+          Cohort_1_Selected[g] = TRUE
+          feasible = TRUE
+          break
+        } else if (!Cohort_1_Selected[g] && (9 - i >= H[Cohort_1[g,1]])) {
+          for (h in 1:H[Cohort_1[g,1]]) {
+            if (Cohort_1[g,1] %in% c(13,14,19,20,22)) {
+              schedule_2[[i,j]] = c(Cohort_1[g,1], Cohort_1[g,2])
+            }
+            schedule_1[[i,j]] = c(Cohort_1[g,1], Cohort_1[g,2])
+            i = i + 1
+          }
+          Cohort_1_Selected[g] = TRUE
+          feasible = TRUE
+          
+          # If a course is scheduled on Morning, Lunch of Evening slots penalize it
+          if (i %in% c(1,4,8)) {
+            penalty = penalty + 5
+          }
+          
+          # If a professor is scheduled on a Monday or Friday penalize it
+          if (j  == 1) {
+            mondayProfs = c(mondayProfs, Cohort_1[g,2])
+          }
+          
+          if (j  == 5) {
+            fridayProfs = c(fridayProfs, Cohort_1[g,2])
+          }
+          
+          break
+        }
+      }
+      if (!feasible) {
+        i = i + 1
+      }
+    }
+    j = j + 1
+  }
+  
+  # Generater Schedule for Cohort 2
+  j = 1
+  Cohort_2_Selected = c(rep(FALSE,21))
+  while (j <= 5)
+  {
+    i = 1
+    while (i <= 8)
+    {
+      feasible = FALSE
+      for (g in 1:length(Cohort_2_Selected)) {
+        if (!Cohort_2_Selected[g] && Cohort_2[g,1] == 0) {
+          if(length(which(sapply(schedule_2[i,j], is.null) == FALSE)) == 0){
+            schedule_2[[i,j]] = c(0,0)
+            i = i + 1
+            Cohort_2_Selected[g] = TRUE
+            feasible = TRUE
+            break
+          } else {
+            break
+          }
+        } else if (!Cohort_2_Selected[g] && (9 - i >= H[Cohort_2[g,1]])) {
+          if(length(which(sapply(schedule_2[i:(i+H[Cohort_2[g,1]]-1),j], is.null) == FALSE)) == 0){
+            for (h in 1:H[Cohort_2[g,1]]) {
+              schedule_2[[i,j]] = c(Cohort_2[g,1], Cohort_2[g,2])
+              i = i + 1
+            }
+            Cohort_2_Selected[g] = TRUE
+            feasible = TRUE
+            
+            # If a course is scheduled on Morning, Lunch of Evening slots penalize it
+            if (i %in% c(1,4,8)) {
+              penalty = penalty + 5
+            }
+            
+            # If a professor is scheduled on a Monday or Friday penalize it
+            if (j  == 1) {
+              mondayProfs = c(mondayProfs, Cohort_1[g,2])
+            }
+            
+            if (j  == 5) {
+              fridayProfs = c(fridayProfs, Cohort_1[g,2])
+            }
+            
+            break
+          }else {
+            break
+          }
+        }
+      }
+      
+      if (!feasible) {
+        i = i + 1
+      }
+    }
+    j = j + 1
+  }
+  
+  penalty = penalty + 8*(length(unique(c(mondayProfs))))
+  penalty = penalty + 8*(length(unique(c(fridayProfs))))
 }
 
 P = Matrix(c(), nrow=10, ncol=22, byrow=T)
