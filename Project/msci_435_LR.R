@@ -1161,7 +1161,7 @@ mysol = gurobi(myLP)
 mysol$objval
 mysol$x
 
-### MAGIC ###
+### Lagrangian Relaxation ###
 
 # Create objective function of subproblems
 u = 100
@@ -1180,6 +1180,7 @@ dir_LR = dir[-125:-404]
 
 bvec_LR_Relaxed = (-1)*bvec[125:404]
 
+# Subproblem Function
 SP = function(obj_vec, Amat, dir, bvec, ub=NULL, lb=NULL){
   mySP1 = list()
   mySP1$modelsense = "min"
@@ -1197,6 +1198,7 @@ SP = function(obj_vec, Amat, dir, bvec, ub=NULL, lb=NULL){
   list(x.h = x.h, z.SP = z.SP)
 }
 
+# Master Problem Function
 MP = function(myMP, Amat, rhs){
   myMP$A = rBind(myMP$A, Amat)
   myMP$sense = c(myMP$sense, c(">=", ">=", ">=", ">="))
